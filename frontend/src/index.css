@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+ 
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer components{
+  .btn-primary{
+    @apply text-white bg-blue-500 rounded-md px-2 font-bold text-sm flex items-center justify-between cursor-pointer disabled:bg-slate-400 disabled:cursor-not-allowed
+  }
+  .btn-secondary{
+    @apply text-white bg-red-400 rounded-md px-2 font-bold text-sm flex items-center justify-between cursor-pointer
+  }
+  .category-tag{
+    @apply text-white bg-blue-500 rounded-full px-2 font-bold text-sm
+  }
+  .archived-tag{
+    @apply text-white bg-gray-300 rounded-full px-2 font-bold text-sm
+  }
+  .cut-off{
+    
+    @apply max-h-[4.5rem] line-clamp-3
+  
+  }
+  .center-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    z-index: 51;
+  }
+  
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.5); /* Adjust the alpha value for darkness */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 40; /* Adjust the alpha value for darkness */
+  }
+}
+
+.input{
+  background-color: #ddd;
+}
