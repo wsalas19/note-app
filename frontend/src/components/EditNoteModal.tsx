@@ -1,8 +1,8 @@
 import { NoteModalProps } from "@/utils/types";
-import React, { ChangeEvent, useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import Modal from "react-modal";
 
-function CreateNoteModal({ isOpen, onClose, onNoteCreate }: NoteModalProps) {
+function EditNoteModal({ isOpen, onClose, onNoteEdit }: NoteModalProps) {
 	const initialState = {
 		category: "all",
 		text: "",
@@ -22,7 +22,7 @@ function CreateNoteModal({ isOpen, onClose, onNoteCreate }: NoteModalProps) {
 	};
 
 	const handleNoteCreation = () => {
-		onNoteCreate(newNote);
+		onNoteEdit(newNote);
 		setNewNote(initialState);
 		onClose();
 	};
@@ -43,7 +43,7 @@ function CreateNoteModal({ isOpen, onClose, onNoteCreate }: NoteModalProps) {
 				overlayClassName='overlay'
 			>
 				<div className='flex flex-col p-4'>
-					<h2 className='text-2xl font-bold mb-4'>Create a New Note</h2>
+					<h2 className='text-2xl font-bold mb-4'>Edit Note</h2>
 					<label className='mb-2 mr-2'>Category </label>
 					<select className='btn-primary' value={newNote.category} onChange={handleCategoryChange}>
 						<option value='all'>All Categories</option>
@@ -75,7 +75,7 @@ function CreateNoteModal({ isOpen, onClose, onNoteCreate }: NoteModalProps) {
 							onClick={handleNoteCreation}
 							disabled={newNote.category === "all" || newNote.text === ""}
 						>
-							Create
+							Edit
 						</button>
 					</div>
 				</div>
@@ -84,4 +84,4 @@ function CreateNoteModal({ isOpen, onClose, onNoteCreate }: NoteModalProps) {
 	);
 }
 
-export default CreateNoteModal;
+export default EditNoteModal;

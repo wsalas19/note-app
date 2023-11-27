@@ -1,6 +1,6 @@
 import { /* useState, */ ChangeEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { FilterOption } from '../../utils/types';
+import { FilterOption } from '../utils/types';
 
 type HeadingControlsProps = {
   addNote: () => void;
