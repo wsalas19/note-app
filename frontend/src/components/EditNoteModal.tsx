@@ -1,12 +1,18 @@
-import { NoteModalProps } from "@/utils/types";
+import { EditNoteProp, NoteProps } from "@/utils/types";
 import React, { useState, ChangeEvent } from "react";
 import Modal from "react-modal";
 
-function EditNoteModal({ isOpen, onClose, onNoteEdit }: NoteModalProps) {
+type EditModalProps = {
+	isOpen: boolean;
+	onClose: () => void;
+	onNoteEdit: (id: number, updatedNote: EditNoteProp) => void;
+	NoteData: NoteProps;
+};
+function EditNoteModal({ isOpen, onClose, onNoteEdit, NoteData }: EditModalProps) {
 	const initialState = {
-		category: "all",
-		text: "",
-		archived: false,
+		category: NoteData.category,
+		text: NoteData.text,
+		archived: NoteData.archived,
 	};
 	const [newNote, setNewNote] = useState(initialState);
 
@@ -22,7 +28,7 @@ function EditNoteModal({ isOpen, onClose, onNoteEdit }: NoteModalProps) {
 	};
 
 	const handleNoteCreation = () => {
-		onNoteEdit(newNote);
+		onNoteEdit(NoteData.id, newNote);
 		setNewNote(initialState);
 		onClose();
 	};
@@ -47,14 +53,14 @@ function EditNoteModal({ isOpen, onClose, onNoteEdit }: NoteModalProps) {
 					<label className='mb-2 mr-2'>Category </label>
 					<select className='btn-primary' value={newNote.category} onChange={handleCategoryChange}>
 						<option value='all'>All Categories</option>
-						<option value='Generic'>Generic</option>
+						<option value='generic'>Generic</option>
 					</select>
 					<label className='mb-2'>Text</label>
 					<textarea
 						name='text'
 						value={newNote.text}
 						onChange={handleInputChange}
-						className='input rounded-md  '
+						className='input rounded-sm resize-none h-fit p-1 text-sm '
 					/>
 					<label className='mb-2 mr-2'>
 						Archived

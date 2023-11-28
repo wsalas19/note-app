@@ -7,7 +7,7 @@ function ConfirmDeleteModal({ isOpen, onClose, deleteFn }: DeleteModalProps) {
 			<Modal
 				isOpen={isOpen}
 				onRequestClose={onClose}
-				className=' rounded-xl center-modal'
+				className=' rounded-lg center-modal'
 				overlayClassName='overlay'
 			>
 				<div className='flex flex-col p-2'>

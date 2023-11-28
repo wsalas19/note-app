@@ -5,8 +5,15 @@ export type NoteProps = {
 	category: string;
 	archived: boolean;
 	text: string;
-	createdAt: string; // Assuming createdAt is a string, adjust as needed
+	createdAt: string;
 	deleteNote?: () => void;
+	editNote?: () => void;
+};
+
+export type EditNoteProp = {
+	category: string;
+	archived: boolean;
+	text: string;
 };
 export type DeleteModalProps = {
 	isOpen: boolean;

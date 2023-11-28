@@ -2,10 +2,11 @@ import React from "react";
 import { NoteProps } from "../utils/types"; // Adjust the import path as needed
 import Note from "./Note";
 
-const NoteGroup: React.FC<{ notes: NoteProps[]; deleteNote: (id: number) => void }> = ({
-	notes,
-	deleteNote,
-}) => {
+const NoteGroup: React.FC<{
+	notes: NoteProps[];
+	deleteNote: (id: number) => void;
+	updateNote: (id: number, updatedNote: NoteProps) => void;
+}> = ({ notes, deleteNote }) => {
 	if (notes.length === 0)
 		return (
 			<div>

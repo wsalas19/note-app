@@ -39,7 +39,7 @@ function CreateNoteModal({ isOpen, onClose, onNoteCreate }: NoteModalProps) {
 			<Modal
 				isOpen={isOpen}
 				onRequestClose={onClose}
-				className=' rounded-xl center-modal'
+				className=' rounded-lg center-modal'
 				overlayClassName='overlay'
 			>
 				<div className='flex flex-col p-4'>
@@ -47,14 +47,15 @@ function CreateNoteModal({ isOpen, onClose, onNoteCreate }: NoteModalProps) {
 					<label className='mb-2 mr-2'>Category </label>
 					<select className='btn-primary' value={newNote.category} onChange={handleCategoryChange}>
 						<option value='all'>All Categories</option>
-						<option value='Generic'>Generic</option>
+						<option value='generic'>Generic</option>
 					</select>
 					<label className='mb-2'>Text</label>
 					<textarea
 						name='text'
 						value={newNote.text}
 						onChange={handleInputChange}
-						className='input rounded-md  '
+						placeholder='Write the content here...'
+						className='input rounded-sm resize-none p-1 text-sm '
 					/>
 					<label className='mb-2 mr-2'>
 						Archived
