@@ -1,21 +1,21 @@
-import { EditNoteProp, NoteProps } from "@/utils/types";
+import { NoteProps } from "../utils/types";
+import { useNotes } from "../utils/useNotes";
 import React, { useState, ChangeEvent } from "react";
 import Modal from "react-modal";
 
 type EditModalProps = {
 	isOpen: boolean;
 	onClose: () => void;
-	onNoteEdit: (id: number, updatedNote: EditNoteProp) => void;
 	NoteData: NoteProps;
 };
-function EditNoteModal({ isOpen, onClose, onNoteEdit, NoteData }: EditModalProps) {
+function EditNoteModal({ isOpen, onClose, NoteData }: EditModalProps) {
 	const initialState = {
 		category: NoteData.category,
 		text: NoteData.text,
 		archived: NoteData.archived,
 	};
 	const [newNote, setNewNote] = useState(initialState);
-
+	const { updateNote } = useNotes();
 	const handleInputChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLInputElement>,
 	) => {
@@ -28,8 +28,8 @@ function EditNoteModal({ isOpen, onClose, onNoteEdit, NoteData }: EditModalProps
 	};
 
 	const handleNoteCreation = () => {
-		onNoteEdit(NoteData.id, newNote);
-		setNewNote(initialState);
+		updateNote.mutate({ id: NoteData.id, noteData: newNote });
+		//setNewNote(initialState);
 		onClose();
 	};
 
@@ -45,10 +45,10 @@ function EditNoteModal({ isOpen, onClose, onNoteEdit, NoteData }: EditModalProps
 			<Modal
 				isOpen={isOpen}
 				onRequestClose={onClose}
-				className=' rounded-xl center-modal'
+				className=' rounded-xl center-modal w-[20%]'
 				overlayClassName='overlay'
 			>
-				<div className='flex flex-col p-4'>
+				<div className='flex flex-col '>
 					<h2 className='text-2xl font-bold mb-4'>Edit Note</h2>
 					<label className='mb-2 mr-2'>Category </label>
 					<select className='btn-primary' value={newNote.category} onChange={handleCategoryChange}>
@@ -60,7 +60,7 @@ function EditNoteModal({ isOpen, onClose, onNoteEdit, NoteData }: EditModalProps
 						name='text'
 						value={newNote.text}
 						onChange={handleInputChange}
-						className='input rounded-sm resize-none h-fit p-1 text-sm '
+						className='input rounded-sm resize-none p-1 text-sm'
 					/>
 					<label className='mb-2 mr-2'>
 						Archived

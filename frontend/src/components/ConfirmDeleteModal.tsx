@@ -1,6 +1,8 @@
 import { DeleteModalProps } from "@/utils/types";
+import { useNotes } from "../utils/useNotes";
 import Modal from "react-modal";
-function ConfirmDeleteModal({ isOpen, onClose, deleteFn }: DeleteModalProps) {
+function ConfirmDeleteModal({ isOpen, onClose, id }: DeleteModalProps) {
+	const { deleteNote } = useNotes();
 	return (
 		<>
 			{isOpen && <div className='overlay'></div>}
@@ -19,7 +21,7 @@ function ConfirmDeleteModal({ isOpen, onClose, deleteFn }: DeleteModalProps) {
 						<button
 							onClick={() => {
 								onClose();
-								deleteFn();
+								deleteNote.mutate(id);
 							}}
 							className='btn-secondary'
 						>

@@ -1,13 +1,19 @@
-import React, { createContext, useState, ReactNode } from "react";
+import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { EditNoteProp, FilterOption, NoteProps } from "@/utils/types";
 import { UseMutationResult, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getNotes, postNote } from "./apiService";
+import { getNotes, postNote, putNote, removeNote } from "./apiService";
+
+type UpdateNoteProps = {
+	id: number;
+	noteData: EditNoteProp;
+};
 
 type NotesContextType = {
 	notes: NoteProps[];
+	setNotes: React.Dispatch<React.SetStateAction<NoteProps[]>>;
 	addNote: UseMutationResult<unknown, Error, EditNoteProp, unknown>;
-	deleteNote: (id: number) => void;
-	updateNote: (id: number, updatedNote: NoteProps) => void;
+	deleteNote: UseMutationResult<unknown, Error, number, unknown>;
+	updateNote: UseMutationResult<unknown, Error, UpdateNoteProps, unknown>;
 	filterArchived: (criteria: FilterOption) => void;
 	isLoading: boolean;
 };
@@ -18,76 +24,48 @@ type NotesProviderProps = {
 };
 
 export const NotesProvider: React.FC<NotesProviderProps> = ({ children }) => {
-	/* let noteData: NoteProps[] = [
-		{
-			id: 1,
-			category: "generic",
-			archived: true,
-			text: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi quo praesentium veniam eveniet quas quibusdam recusandae dolorum inventore dicta illum dolorem dolor, iste animi sequi nihil cupiditate tempora ab repudiandae consectetur totam. Ab eligendi, consequuntur deleniti error consectetur officiis eaque?",
-			createdAt: "2023-01-01",
-		},
-		{
-			id: 2,
-			category: "generic",
-			archived: false,
-			text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-			createdAt: "2023-01-01",
-		},
-		{
-			id: 3,
-			category: "generic",
-			archived: true,
-			text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-			createdAt: "2023-01-01",
-		},
-		{
-			id: 4,
-			category: "generic",
-			archived: false,
-			text: " Lorem ipsum dolor sit amet consectetur adipisicing elit. Error nulla exercitationem ducimus?",
-			createdAt: "2023-01-01",
-		},
-		{
-			id: 5,
-			category: "generic",
-			archived: false,
-			text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-			createdAt: "2023-01-01",
-		},
-	]; */
-	const notesQuery = useQuery({ queryKey: ["notes"], queryFn: getNotes });
+	const { data: noteData, isLoading } = useQuery({ queryKey: ["notes"], queryFn: getNotes });
 	const queryClient = useQueryClient();
-	const isLoading = notesQuery.isLoading;
-	const noteData = notesQuery.data;
+	const refetch = () => {
+		queryClient.invalidateQueries({ queryKey: ["notes"] });
+	};
 
-	const [notes, setNotes] = useState<NoteProps[]>(noteData || []);
+	const [notes, setNotes] = useState<NoteProps[]>([]);
 
-	/* const addNote = (newNote: { category: string; text: string; archived: boolean }) => {
-		const newNoteWithId: NoteProps = {
-			id: Math.random(),
-			createdAt: new Date().toISOString(),
-			...newNote,
-		};
-
-		setNotes((prevNotes) => [...prevNotes, newNoteWithId]);
-	}; */
+	useEffect(() => {
+		if (noteData) {
+			const sortedNotes = [...noteData].sort((a, b) => a.id - b.id);
+			setNotes(sortedNotes);
+		}
+	}, [noteData]);
 
 	const addNote: UseMutationResult<unknown, Error, EditNoteProp, unknown> = useMutation({
 		mutationFn: postNote,
 		onSuccess: () => {
-			// Invalidate and refetch
-			queryClient.invalidateQueries({ queryKey: ["notes"] });
+			refetch();
+		},
+	});
+	const deleteNote: UseMutationResult<unknown, Error, number, unknown> = useMutation({
+		mutationFn: removeNote,
+		onSuccess: () => {
+			refetch();
 		},
 	});
 
-	const deleteNote = (id: number) => {
+	const updateNote: UseMutationResult<unknown, Error, UpdateNoteProps, unknown> = useMutation({
+		mutationFn: (variables: UpdateNoteProps) => putNote(variables.id, variables.noteData),
+		onSuccess: () => {
+			refetch();
+		},
+	});
+	/* const deleteNote = (id: number) => {
 		const currentDelete = notes.filter((note) => note.id !== id);
 		setNotes(currentDelete);
-	};
+	}; */
 
-	const updateNote = (id: number, updatedNote: NoteProps) => {
+	/* const updateNote = (id: number, updatedNote: NoteProps) => {
 		setNotes((prevNotes) => prevNotes.map((note) => (note.id === id ? updatedNote : note)));
-	};
+	}; */
 
 	/*  const updateNote = (id: number, data: NoteProps) => {
 		let noteSearch = notes.find((note) => note.id === id);
@@ -98,6 +76,16 @@ export const NotesProvider: React.FC<NotesProviderProps> = ({ children }) => {
 		noteData = noteData.filter((note) => note.id !== id);
 		noteData.push(noteSearch);
 		setNotes(noteData);
+	}; */
+
+	/* const addNote = (newNote: { category: string; text: string; archived: boolean }) => {
+		const newNoteWithId: NoteProps = {
+			id: Math.random(),
+			createdAt: new Date().toISOString(),
+			...newNote,
+		};
+
+		setNotes((prevNotes) => [...prevNotes, newNoteWithId]);
 	}; */
 
 	const filterArchived = (criteria: FilterOption) => {
@@ -112,6 +100,7 @@ export const NotesProvider: React.FC<NotesProviderProps> = ({ children }) => {
 
 	const contextValue: NotesContextType = {
 		notes,
+		setNotes,
 		addNote,
 		deleteNote,
 		updateNote,

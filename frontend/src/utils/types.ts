@@ -11,14 +11,14 @@ export type NoteProps = {
 };
 
 export type EditNoteProp = {
-	category: string;
-	archived: boolean;
-	text: string;
+	category?: string;
+	archived?: boolean;
+	text?: string;
 };
 export type DeleteModalProps = {
 	isOpen: boolean;
 	onClose: () => void;
-	deleteFn: () => void;
+	id: number;
 };
 export type NoteModalProps = {
 	isOpen: boolean;

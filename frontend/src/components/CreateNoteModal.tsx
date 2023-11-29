@@ -41,10 +41,10 @@ function CreateNoteModal({ isOpen, onClose }: NoteModalProps) {
 			<Modal
 				isOpen={isOpen}
 				onRequestClose={onClose}
-				className=' rounded-lg center-modal'
+				className=' rounded-lg center-modal w-[20%]'
 				overlayClassName='overlay'
 			>
-				<div className='flex flex-col p-4'>
+				<div className='flex flex-col '>
 					<h2 className='text-2xl font-bold mb-4'>Create a New Note</h2>
 					<label className='mb-2 mr-2'>Category </label>
 					<select className='btn-primary' value={newNote.category} onChange={handleCategoryChange}>

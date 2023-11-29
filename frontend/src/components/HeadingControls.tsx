@@ -7,9 +7,6 @@ function HeadingControls({ openModal }: { openModal: () => void }) {
 	const [searchParams, setSearchParams] = useSearchParams({ archived: "all", category: "all" });
 	const { filterArchived } = useNotes();
 	const archived = searchParams.get("archived") || "all";
-	const category = searchParams.get("category") || "all";
-	/*  const [filterArchived, setFilterArchived] = useState<FilterOption>('all');
-  const [filterCategory, setFilterCategory] = useState('all'); */
 
 	const handleArchivedChange = (event: ChangeEvent<HTMLSelectElement>) => {
 		const { value } = event.target;
@@ -21,16 +18,6 @@ function HeadingControls({ openModal }: { openModal: () => void }) {
 		setSearchParams(
 			(prev) => {
 				prev.set("archived", event.target.value);
-				return prev;
-			},
-			{ replace: true },
-		);
-	};
-
-	const handleCategoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
-		setSearchParams(
-			(prev) => {
-				prev.set("category", event.target.value);
 				return prev;
 			},
 			{ replace: true },
@@ -50,17 +37,17 @@ function HeadingControls({ openModal }: { openModal: () => void }) {
 						<button className=' btn-primary' onClick={() => openModal()}>
 							+ new note
 						</button>
-						<button disabled className=' btn-primary'>
+						{/* <button disabled className=' btn-primary'>
 							+ new category
-						</button>
+						</button> */}
 
 						<select className='btn-primary' value={archived} onChange={handleArchivedChange}>
-							<option value='all'>All</option>
+							<option value='all'>All Notes</option>
 							<option value='archived'>Archived</option>
 							<option value='unarchived'>Unarchived</option>
 						</select>
 
-						<select
+						{/* <select
 							className='btn-primary'
 							value={category}
 							disabled
@@ -68,7 +55,7 @@ function HeadingControls({ openModal }: { openModal: () => void }) {
 						>
 							<option value='all'>All Categories</option>
 							<option value='category1'>Generic</option>
-						</select>
+						</select> */}
 					</div>
 				</div>
 			</div>

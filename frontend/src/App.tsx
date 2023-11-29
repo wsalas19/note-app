@@ -3,14 +3,14 @@ import { useState } from "react";
 import HeadingControls from "./components/HeadingControls";
 import NoteGroup from "./components/NoteGroup";
 import CreateNoteModal from "./components/CreateNoteModal";
-//import { useNotes } from "./utils/useNotes.tsx";
-import { useQuery } from "@tanstack/react-query";
-import { getNotes } from "./utils/apiService.ts";
+import { useNotes } from "./utils/useNotes.tsx";
+/* import { useQuery } from "@tanstack/react-query";
+import { getNotes } from "./utils/apiService.ts"; */
 
 function App() {
-	//const { notes, isLoading } = useNotes();
+	const { notes, isLoading, addNote } = useNotes();
 
-	const notesQuery = useQuery({ queryKey: ["notes"], queryFn: getNotes });
+	//const notesQuery = useQuery({ queryKey: ["notes"], queryFn: getNotes });
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const openModal = () => setIsModalOpen(true);
@@ -19,10 +19,12 @@ function App() {
 	return (
 		<>
 			<HeadingControls openModal={openModal} />
-			{notesQuery.isLoading ? (
-				<p className=' font-bold text-gray-400 text-center p-5'>Loading...</p>
+			{isLoading || addNote.isPending ? (
+				<p className=' font-bold text-gray-400 text-center p-5'>
+					{isLoading ? "Loading..." : "Creating..."}
+				</p>
 			) : (
-				<NoteGroup notes={notesQuery.data} />
+				<NoteGroup notes={notes} />
 			)}
 
 			<CreateNoteModal isOpen={isModalOpen} onClose={closeModal} />

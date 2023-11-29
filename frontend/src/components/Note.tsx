@@ -2,17 +2,11 @@ import React, { useState } from "react";
 import { NoteProps } from "../utils/types";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import EditNoteModal from "./EditNoteModal";
+import { useNotes } from "../utils/useNotes";
 
-const Note: React.FC<NoteProps> = ({
-	id,
-	category,
-	archived,
-	text,
-	createdAt,
-	deleteNote,
-	editNote,
-}) => {
+const Note: React.FC<NoteProps> = ({ id, category, archived, text, createdAt, deleteNote }) => {
 	const [isModalOpen, setIsModalOpen] = useState({ edit: false, delete: false });
+	const { updateNote } = useNotes();
 
 	const openModal = (mode: string) =>
 		setIsModalOpen((prev) => {
@@ -22,17 +16,7 @@ const Note: React.FC<NoteProps> = ({
 		setIsModalOpen((prev) => {
 			return { ...prev, [mode]: false };
 		});
-	const handleDelete = () => {
-		if (deleteNote) {
-			deleteNote();
-		}
-	};
 
-	const handleEdit = () => {
-		if (editNote) {
-			editNote();
-		}
-	};
 	//const truncatedText = text.length > 100 ? `${text.substring(0, 95)}...` : text;
 	return (
 		<>
@@ -48,7 +32,10 @@ const Note: React.FC<NoteProps> = ({
 						</span>
 						{archived && <span className='archived-tag'>Archived</span>}
 					</div>
-					<button className='btn-secondary' onClick={() => openModal("delete")}>
+					<button
+						className=' text-red-400 font-bold hover:text-red-600'
+						onClick={() => openModal("delete")}
+					>
 						delete
 					</button>
 				</div>
@@ -60,20 +47,27 @@ const Note: React.FC<NoteProps> = ({
 				>
 					{text}
 				</p>
-				<div className='flex justify-end mt-2'>
-					<span className='text-xs text-gray-500'>{createdAt}</span>
+				<div className='flex justify-between mt-2 items-center'>
+					<span className='text-xs text-gray-500'>{`created at: ${createdAt.slice(0, 10)}`}</span>
+					<button
+						onClick={() => {
+							updateNote.mutate({ id, noteData: { archived: archived ? false : true } });
+						}}
+						className='text-blue-400 font-bold hover:text-blue-600'
+					>
+						{archived ? "unarchive" : "archive"}
+					</button>
 				</div>
 			</div>
 			<ConfirmDeleteModal
 				isOpen={isModalOpen.delete}
 				onClose={() => closeModal("delete")}
-				deleteFn={handleDelete}
+				id={id}
 			/>
 			<EditNoteModal
 				isOpen={isModalOpen.edit}
 				onClose={() => closeModal("edit")}
 				NoteData={{ id, category, archived, text, createdAt, deleteNote }}
-				onNoteEdit={handleEdit}
 			/>
 		</>
 	);
