@@ -1,14 +1,16 @@
 import { NoteModalProps } from "@/utils/types";
+import { useNotes } from "../utils/useNotes";
 import React, { ChangeEvent, useState } from "react";
 import Modal from "react-modal";
 
-function CreateNoteModal({ isOpen, onClose, onNoteCreate }: NoteModalProps) {
+function CreateNoteModal({ isOpen, onClose }: NoteModalProps) {
 	const initialState = {
 		category: "all",
 		text: "",
 		archived: false,
 	};
 	const [newNote, setNewNote] = useState(initialState);
+	const { addNote } = useNotes();
 
 	const handleInputChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLInputElement>,
@@ -22,7 +24,7 @@ function CreateNoteModal({ isOpen, onClose, onNoteCreate }: NoteModalProps) {
 	};
 
 	const handleNoteCreation = () => {
-		onNoteCreate(newNote);
+		addNote.mutate(newNote);
 		setNewNote(initialState);
 		onClose();
 	};

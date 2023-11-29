@@ -1,25 +1,24 @@
 import React, { createContext, useState, ReactNode } from "react";
-import { FilterOption, NoteProps } from "@/utils/types";
+import { EditNoteProp, FilterOption, NoteProps } from "@/utils/types";
+import { UseMutationResult, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getNotes, postNote } from "./apiService";
 
-// Define the shape of the context
 type NotesContextType = {
 	notes: NoteProps[];
-	addNote: (newNote: { category: string; text: string; archived: boolean }) => void;
+	addNote: UseMutationResult<unknown, Error, EditNoteProp, unknown>;
 	deleteNote: (id: number) => void;
 	updateNote: (id: number, updatedNote: NoteProps) => void;
 	filterArchived: (criteria: FilterOption) => void;
+	isLoading: boolean;
 };
-
-// Create the context
 export const NotesContext = createContext<NotesContextType | undefined>(undefined);
 
-// Create a provider component
 type NotesProviderProps = {
 	children: ReactNode;
 };
 
 export const NotesProvider: React.FC<NotesProviderProps> = ({ children }) => {
-	let noteData: NoteProps[] = [
+	/* let noteData: NoteProps[] = [
 		{
 			id: 1,
 			category: "generic",
@@ -55,25 +54,35 @@ export const NotesProvider: React.FC<NotesProviderProps> = ({ children }) => {
 			text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
 			createdAt: "2023-01-01",
 		},
-	];
+	]; */
+	const notesQuery = useQuery({ queryKey: ["notes"], queryFn: getNotes });
+	const queryClient = useQueryClient();
+	const isLoading = notesQuery.isLoading;
+	const noteData = notesQuery.data;
 
-	const [notes, setNotes] = useState<NoteProps[]>(noteData);
+	const [notes, setNotes] = useState<NoteProps[]>(noteData || []);
 
-	const addNote = (newNote: { category: string; text: string; archived: boolean }) => {
+	/* const addNote = (newNote: { category: string; text: string; archived: boolean }) => {
 		const newNoteWithId: NoteProps = {
 			id: Math.random(),
 			createdAt: new Date().toISOString(),
 			...newNote,
 		};
-		noteData.push(newNoteWithId);
-		setNotes((prevNotes: NoteProps[]) => [...prevNotes, newNoteWithId]);
-	};
+
+		setNotes((prevNotes) => [...prevNotes, newNoteWithId]);
+	}; */
+
+	const addNote: UseMutationResult<unknown, Error, EditNoteProp, unknown> = useMutation({
+		mutationFn: postNote,
+		onSuccess: () => {
+			// Invalidate and refetch
+			queryClient.invalidateQueries({ queryKey: ["notes"] });
+		},
+	});
 
 	const deleteNote = (id: number) => {
-		const rootDelete = noteData.filter((note) => note.id !== id);
 		const currentDelete = notes.filter((note) => note.id !== id);
 		setNotes(currentDelete);
-		noteData = rootDelete;
 	};
 
 	const updateNote = (id: number, updatedNote: NoteProps) => {
@@ -93,9 +102,9 @@ export const NotesProvider: React.FC<NotesProviderProps> = ({ children }) => {
 
 	const filterArchived = (criteria: FilterOption) => {
 		if (criteria === "archived") {
-			setNotes(noteData.filter((note) => note.archived === true));
+			setNotes(noteData.filter((note: NoteProps) => note.archived === true));
 		} else if (criteria === "unarchived") {
-			setNotes(noteData.filter((note) => note.archived === false));
+			setNotes(noteData.filter((note: NoteProps) => note.archived === false));
 		} else {
 			setNotes(noteData);
 		}
@@ -107,6 +116,7 @@ export const NotesProvider: React.FC<NotesProviderProps> = ({ children }) => {
 		deleteNote,
 		updateNote,
 		filterArchived,
+		isLoading,
 	};
 
 	return <NotesContext.Provider value={contextValue}>{children}</NotesContext.Provider>;

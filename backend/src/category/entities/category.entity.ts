@@ -1,18 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
-
 @Entity()
-export class Note {
+export class Category {
 	@PrimaryGeneratedColumn()
 	id: number;
 
 	@Column()
-	text: string;
-
-	@Column()
-	category: string;
-
-	@Column()
-	archived: boolean;
+	name: string;
 
 	@Column()
 	createdAt: Date;

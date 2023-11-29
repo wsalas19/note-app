@@ -23,5 +23,11 @@ export type DeleteModalProps = {
 export type NoteModalProps = {
 	isOpen: boolean;
 	onClose: () => void;
-	onNoteCreate: (newNote: { category: string; text: string; archived: boolean }) => void;
 };
+
+export class PostNoteError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "PostNoteError";
+	}
+}

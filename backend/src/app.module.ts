@@ -5,6 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { NoteModule } from "./note/note.module";
 import { ConfigModule } from "@nestjs/config";
 import { Note } from "./note/entities/note.entity";
+import { CategoryModule } from "./category/category.module";
 
 @Module({
 	imports: [
@@ -20,7 +21,9 @@ import { Note } from "./note/entities/note.entity";
 			autoLoadEntities: true,
 			synchronize: true,
 		}),
+
 		NoteModule,
+		CategoryModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

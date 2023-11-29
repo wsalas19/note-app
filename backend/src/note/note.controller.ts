@@ -3,7 +3,7 @@ import { NoteService } from "./note.service";
 import { CreateNoteDto } from "./dto/create-note.dto";
 import { UpdateNoteDto } from "./dto/update-note.dto";
 
-@Controller("note")
+@Controller("notes")
 export class NoteController {
 	constructor(private readonly noteService: NoteService) {}
 

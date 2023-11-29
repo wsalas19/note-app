@@ -1,14 +1,11 @@
 import { /* useState, */ ChangeEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FilterOption } from "../utils/types";
+import { useNotes } from "../utils/useNotes";
 
-type HeadingControlsProps = {
-	addNote: () => void;
-	filterArchived: (arg0: FilterOption) => void;
-};
-
-function HeadingControls({ addNote, filterArchived }: HeadingControlsProps) {
+function HeadingControls({ openModal }: { openModal: () => void }) {
 	const [searchParams, setSearchParams] = useSearchParams({ archived: "all", category: "all" });
+	const { filterArchived } = useNotes();
 	const archived = searchParams.get("archived") || "all";
 	const category = searchParams.get("category") || "all";
 	/*  const [filterArchived, setFilterArchived] = useState<FilterOption>('all');
@@ -50,7 +47,7 @@ function HeadingControls({ addNote, filterArchived }: HeadingControlsProps) {
 					<h1 className=' font-bold text-lg text-[#121212]'>My Notes</h1>
 
 					<div className='flex flex-row gap-3 justify-between md:justify-start'>
-						<button className=' btn-primary' onClick={addNote}>
+						<button className=' btn-primary' onClick={() => openModal()}>
 							+ new note
 						</button>
 						<button disabled className=' btn-primary'>
