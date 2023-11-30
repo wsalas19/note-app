@@ -19,7 +19,7 @@ const NoteGroup: React.FC<{
 		<>
 			<div className='flex flex-col gap-4 p-4 lg:flex-row lg:flex-wrap lg:justify-start'>
 				{notes.map((note) => (
-					<Note deleteNote={() => deleteNote(note.id)} key={note.id} {...note} />
+					<Note deleteNote={() => deleteNote.mutate(note.id)} key={note.id} {...note} />
 				))}
 			</div>
 		</>
