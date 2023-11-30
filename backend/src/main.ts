@@ -5,7 +5,7 @@ async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	app.use(
 		cors({
-			origin: ["http://localhost:5173", "note-app-zeta-ten.vercel.app"],
+			origin: ["http://localhost:5173", "https://note-app-zeta-ten.vercel.app/"],
 		}),
 	);
 	await app.listen(3000);
